@@ -1,12 +1,10 @@
-float[] posX, posY;
-float[] speedX, speedY;
-int[] r,g,b;
-
 float speed = 10;
 float rad = 100;
 int nrBalls = 10;
 float bounciness = 0.95;
 float gravity = 1;
+
+Ball balls[];
 
 void setup(){
   fullScreen(1); 
@@ -17,28 +15,42 @@ void setup(){
 
 void draw(){
   background(0);
-  DrawBalls();
   CheckColliders();
+  DrawBalls();
   UpdateBallPositions();
 }
 
 void DrawBalls(){
     for (int i = 0; i < nrBalls ; i++){
-      fill(r[i],g[i],b[i]);
-      ellipse(posX[i], posY[i], rad, rad);
+      Ball curBall = balls[i];
+      
+      Color c = new Color();
+      c = curBall.c;
+      
+      Vector2 pos = new Vector2();
+      pos = curBall.GetPos();
+      
+      fill(c.r, c.g, c.b);
+      ellipse(pos.x, pos.y, curBall.r, curBall.r);
     }
 }
 
 void UpdateBallPositions(){
   for (int i = 0 ; i < nrBalls ; i++){
-    posX[i] += speedX[i];
-    posY[i] += speedY[i];
+    balls[i].Move();
   }
   
   for (int i = 0 ; i < nrBalls ; i++){
-    if (posX[i] < 0+(rad/2+0.1) || posX[i] > width-(rad/2+0.1)) speedX[i] = -speedX[i]*bounciness;
-    if (posY[i] < 0+(rad/2+0.1) || posY[i] > height-(rad/2+0.1)){
-      if (posX[i] > height-(rad/2+0.1)) speedY[i] = -speedY[i]*bounciness-gravity;
+    Ball curBall = new Ball();
+    curBall = balls[i];
+    
+    
+    Vector2 pos = new Vector2();
+    pos = curBall.pos;
+    
+    if (pos.x < 0+(curBall.r/2+0.1) || pos.x > width-(curBall.r/2+0.1))  curBall.SetDir(curBall.dir.Multiply(-1));
+    if (pos.y < 0+(curBall.r/2+0.1) || pos.y > height-(curBall.r/2+0.1)){
+      if (pos.y > height-(curBall.r/2+0.1)) speedY[i] = -speedY[i]*bounciness-gravity;
       else speedY[i] = -speedY[i]*bounciness;
     }
     speedY[i] += gravity;
@@ -51,9 +63,6 @@ void InitializeBalls(){
   posY = new float [nrBalls];
   speedX = new float [nrBalls];
   speedY = new float [nrBalls];
-  r = new int [nrBalls];
-  g = new int [nrBalls];
-  b = new int [nrBalls];
   for (int i = 0; i < nrBalls ; i++){
     r[i] = (int) random(256);
     g[i] = (int) random(256);
