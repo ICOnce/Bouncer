@@ -30,7 +30,8 @@ public class Vector2{
   
   public Vector2 MultVec(Vector2 vec){
     Vector2 mult = new Vector2();
-    mult.x = x*vec.x
-    mult.y = x*vec.y
+    mult.x = x*vec.x;
+    mult.y = x*vec.y;
+    return mult;
   }
 }
